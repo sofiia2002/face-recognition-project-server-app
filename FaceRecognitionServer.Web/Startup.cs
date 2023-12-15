@@ -29,7 +29,6 @@ namespace FaceRecognitionServer.Web
             });
             services.AddSingleton<IPersonRepository, PersonRepository>();
             services.AddTransient<IPersonQueriesHandler, PersonQueriesHandler>();
-            services.AddTransient<ICommandHandler<AddPersonCommand>, AddPersonCommandHandler>();
             services.AddTransient<ICommandHandler<SetPersonDetailsCommand>, SetPersonDetailsCommandHandler>();
             services.AddTransient<ICommandHandler<SetPersonNameCommand>, SetPersonNameCommandHandler>();
             services.AddTransient<ICommandHandler<SetPersonTypeCommand>, SetPersonTypeCommandHandler>();
@@ -38,6 +37,9 @@ namespace FaceRecognitionServer.Web
             services.AddSingleton<IStatisticalDataRepository, StatisticalDataRepository>();
             services.AddTransient<IStatisticalDataQueriesHandler, StatisticalDataQueriesHandler>();
             services.AddTransient<ICommandHandler<AddStatisticalDataCommand>, AddStatisticalDataCommandHandler>();
+
+            services.AddSingleton<IRecognizedFacesRepository, RecognizedFacesRepository>();
+            services.AddTransient<IRecognizedFacesQueriesHandler, RecognizedFacesQueriesHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

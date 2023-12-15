@@ -15,8 +15,8 @@
         private readonly ILogger<FaceRecognitionController> logger;
         private readonly IPersonQueriesHandler personQueriesHandler;
         private readonly IStatisticalDataQueriesHandler statisticalDataQueriesHandler;
+        private readonly IRecognizedFacesQueriesHandler recognizedFacesQueriesHandler;
         private readonly ICommandHandler<AddStatisticalDataCommand> addStatisticalDataCommandHandler;
-        private readonly ICommandHandler<AddPersonCommand> addPersonCommandHandler;
         private readonly ICommandHandler<SetPersonNameCommand> setPersonNameCommandHandler;
         private readonly ICommandHandler<SetPersonDetailsCommand> setPersonDetailsCommandHandler;
         private readonly ICommandHandler<SetPersonTypeCommand> setPersonTypeCommandHandler;
@@ -25,19 +25,19 @@
         public FaceRecognitionController(
             ILogger<FaceRecognitionController> logger, 
             IPersonQueriesHandler personQueriesHandler, 
-            ICommandHandler<AddPersonCommand> addPersonCommandHandler,
             ICommandHandler<SetPersonNameCommand> setPersonNameCommandHandler,
             ICommandHandler<SetPersonDetailsCommand> setPersonDetailsCommandHandler,
             ICommandHandler<SetPersonTypeCommand> setPersonTypeCommandHandler,
             ICommandHandler<SetPersonIdentificatorCommand> setPersonIdentificatorCommandHandler,
             IStatisticalDataQueriesHandler statisticalDataQueriesHandler,
-            ICommandHandler<AddStatisticalDataCommand> addStatisticalDataCommandHandler
+            ICommandHandler<AddStatisticalDataCommand> addStatisticalDataCommandHandler,
+            IRecognizedFacesQueriesHandler recognizedFacesQueriesHandler
             )
         {
             this.logger = logger;
             this.personQueriesHandler = personQueriesHandler;
             this.statisticalDataQueriesHandler = statisticalDataQueriesHandler;
-            this.addPersonCommandHandler = addPersonCommandHandler;
+            this.recognizedFacesQueriesHandler = recognizedFacesQueriesHandler;
             this.setPersonNameCommandHandler = setPersonNameCommandHandler;
             this.setPersonDetailsCommandHandler = setPersonDetailsCommandHandler;
             this.setPersonTypeCommandHandler = setPersonTypeCommandHandler;
@@ -57,12 +57,6 @@
         {
             // Add 404 Exception if no person was found, right now it is 204
             return await personQueriesHandler.GetPersonByIdAsync(personId);
-        }
-
-        [HttpPost("add-person")]
-        public void AddNewPerson([FromBody] AddPersonCommand personCommand)
-        {
-            addPersonCommandHandler.Handle(personCommand);
         }
 
         [HttpPut("set-person-details/{id}")]
@@ -124,6 +118,40 @@
         public Task<IEnumerable<StatisticalDataDto>> GetAllStatisticalDataByTimeConstraintAndPersonIAsync([FromQuery] int personId, [FromQuery] long timeStart, [FromQuery] long timeEnd)
         {
             return statisticalDataQueriesHandler.GetStatisticsByTimeConstraintAndPersonId(personId, timeStart, timeEnd);
+        }
+
+        // ----------------------------- Recognized Faces -----------------------------
+
+
+        [HttpGet("recognized-faces")]
+        public async Task<IEnumerable<RecognizedFaceDto>> GetAllRecognizedFacesAsync()
+        {
+            return await recognizedFacesQueriesHandler.GetAllAsync();
+        }
+
+        [HttpGet("recognized-faces-by-person-id")]
+        public async Task<IEnumerable<RecognizedFaceDto>> GetAllRecognizedFacesByPeronIdAsync([FromQuery] int personId)
+        {
+            return await recognizedFacesQueriesHandler.GetRecognizedFacesByIdAsync(personId);
+        }
+
+        [HttpGet("recognized-faces-by-type")]
+        public async Task<IEnumerable<RecognizedFaceDto>> GetAllRecognizedFacesByTypeAsync([FromQuery] int type)
+        {
+            return await recognizedFacesQueriesHandler.GetRecognizedFacesByTypeAsync(type);
+        }
+
+        [HttpGet("recognized-faces-by-time-constraints")]
+        public async Task<IEnumerable<RecognizedFaceDto>> GetAllRecognizedFacesByTimeConstraintsAsync([FromQuery] long timeStart, [FromQuery] long timeEnd)
+        {
+            return await recognizedFacesQueriesHandler.GetRecognizedFacesByTimeConstraint(timeStart, timeEnd);
+        }
+
+
+        [HttpGet("recognized-faces-by-time-constraints-and-person-id")]
+        public async Task<IEnumerable<RecognizedFaceDto>> GetAllRecognizedFacesByTimeConstraintAndPersonIAsync([FromQuery] int personId, [FromQuery] long timeStart, [FromQuery] long timeEnd)
+        {
+            return await recognizedFacesQueriesHandler.GetRecognizedFacesByTimeConstraintAndPersonId(personId, timeStart, timeEnd);
         }
     }
 }

@@ -16,8 +16,23 @@
                 statisticalData.Id,
                 statisticalData.PersonId,
                 ((DateTimeOffset)statisticalData.TimeOnFrame).ToUnixTimeSeconds(),
-                ((DateTimeOffset)statisticalData.TimeOffFrame).ToUnixTimeSeconds(),
-                statisticalData.Emotion
+                ((DateTimeOffset)statisticalData.TimeOffFrame).ToUnixTimeSeconds()
+            );
+        }
+
+        public static RecognizedFaceDto Map(this RecognizedFace recFace)
+        {
+            if (recFace == null)
+                return null;
+
+            return new RecognizedFaceDto
+            (
+                recFace.Id,
+                recFace.PersonId,
+                recFace.Confidence,
+                recFace.Timestamp,
+                recFace.EyesOpened,
+                recFace.ImageUrl
             );
         }
 

@@ -63,8 +63,7 @@
                             Convert.ToInt32(reader["id"]),
                             Convert.ToInt32(reader["person_id"]),
                             dateTime.AddSeconds(Convert.ToInt32(reader["time_on_frame"])).ToLocalTime(),
-                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime(),
-                            Convert.ToString(reader["emotion"])
+                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime()
                             );
 
                         statData.Add(statDataEntity);
@@ -96,8 +95,7 @@
                             Convert.ToInt32(reader["id"]),
                             Convert.ToInt32(reader["person_id"]),
                             dateTime.AddSeconds(Convert.ToInt32(reader["time_on_frame"])).ToLocalTime(),
-                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime(),
-                            Convert.ToString(reader["emotion"])
+                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime()
                             );
 
                             statData.Add(statDataEntity);
@@ -130,8 +128,7 @@
                             Convert.ToInt32(reader["id"]),
                             Convert.ToInt32(reader["person_id"]),
                             dateTime.AddSeconds(Convert.ToInt32(reader["time_on_frame"])).ToLocalTime(),
-                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime(),
-                            Convert.ToString(reader["emotion"])
+                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime()
                             );
 
                             statData.Add(statDataEntity);
@@ -166,8 +163,7 @@
                             Convert.ToInt32(reader["id"]),
                             Convert.ToInt32(reader["person_id"]),
                             dateTime.AddSeconds(Convert.ToInt32(reader["time_on_frame"])).ToLocalTime(),
-                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime(),
-                            Convert.ToString(reader["emotion"])
+                            dateTime.AddSeconds(Convert.ToInt32(reader["time_off_frame"])).ToLocalTime()
                             );
 
                             statData.Add(statDataEntity);

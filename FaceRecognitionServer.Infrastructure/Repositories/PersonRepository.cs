@@ -17,31 +17,6 @@
         {
         }
 
-        async Task IPersonRepository.AddPersonAsync(string name, string identificator, int type) //, Stream imgStream)
-        {
-            const string createPersonQuery = @"
-            INSERT INTO Person (name, identificator, type)
-            VALUES (@Name, @Identificator, @Type);";
-
-            using (var dbConnection = new SqlConnection(Constants.connectionString))
-            {
-                await dbConnection.OpenAsync();
-                using (DbTransaction transaction = dbConnection.BeginTransaction())
-                { 
-                    try {
-                        await dbConnection.ExecuteAsync(createPersonQuery, new { Name = name , Identificator = identificator, Type = type }, transaction);
-                        transaction.Commit();
-                    }
-                    catch (Exception e)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-
-                }
-            }
-        }
-
         async Task<List<Person>> IPersonRepository.GetAllAsync()
         {
             const string getAllPeopleQuery = @"SELECT * FROM Person";
