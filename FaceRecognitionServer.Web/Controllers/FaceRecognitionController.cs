@@ -1,90 +1,129 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using FaceRecognitionServer.Domain.Models;
-using Microsoft.AspNetCore.Mvc;
-using FaceRecognitionServer.Interfaces.Repositories;
-
-namespace FaceRecognitionServer.Web.Controllers
+﻿namespace FaceRecognitionServer.Web.Controllers
 {
+    using FaceRecognitionServer.Web.Application.Commands;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System;
+    using FaceRecognitionServer.Web.Application.Dtos;
+    using FaceRecognitionServer.Web.Application.Queries;
+
+    [ApiController]
     public class FaceRecognitionController : Controller
     {
-        private readonly IFaceAPIClient faceClient;
-        protected readonly NLog.ILogger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+        private readonly ILogger<FaceRecognitionController> logger;
+        private readonly IPersonQueriesHandler personQueriesHandler;
+        private readonly IStatisticalDataQueriesHandler statisticalDataQueriesHandler;
+        private readonly ICommandHandler<AddStatisticalDataCommand> addStatisticalDataCommandHandler;
+        private readonly ICommandHandler<AddPersonCommand> addPersonCommandHandler;
+        private readonly ICommandHandler<SetPersonNameCommand> setPersonNameCommandHandler;
+        private readonly ICommandHandler<SetPersonDetailsCommand> setPersonDetailsCommandHandler;
+        private readonly ICommandHandler<SetPersonTypeCommand> setPersonTypeCommandHandler;
+        private readonly ICommandHandler<SetPersonIdentificatorCommand> setPersonIdentificatorCommandHandler;
 
-        public FaceRecognitionController(IFaceAPIClient faceClient)
+        public FaceRecognitionController(
+            ILogger<FaceRecognitionController> logger, 
+            IPersonQueriesHandler personQueriesHandler, 
+            ICommandHandler<AddPersonCommand> addPersonCommandHandler,
+            ICommandHandler<SetPersonNameCommand> setPersonNameCommandHandler,
+            ICommandHandler<SetPersonDetailsCommand> setPersonDetailsCommandHandler,
+            ICommandHandler<SetPersonTypeCommand> setPersonTypeCommandHandler,
+            ICommandHandler<SetPersonIdentificatorCommand> setPersonIdentificatorCommandHandler,
+            IStatisticalDataQueriesHandler statisticalDataQueriesHandler,
+            ICommandHandler<AddStatisticalDataCommand> addStatisticalDataCommandHandler
+            )
         {
-            this.faceClient = faceClient;
+            this.logger = logger;
+            this.personQueriesHandler = personQueriesHandler;
+            this.statisticalDataQueriesHandler = statisticalDataQueriesHandler;
+            this.addPersonCommandHandler = addPersonCommandHandler;
+            this.setPersonNameCommandHandler = setPersonNameCommandHandler;
+            this.setPersonDetailsCommandHandler = setPersonDetailsCommandHandler;
+            this.setPersonTypeCommandHandler = setPersonTypeCommandHandler;
+            this.setPersonIdentificatorCommandHandler = setPersonIdentificatorCommandHandler;
+            this.addStatisticalDataCommandHandler = addStatisticalDataCommandHandler;
         }
 
-        public IActionResult Create()
+
+        [HttpGet("people-data")]
+        public async Task<IEnumerable<PersonDto>> GetAllPeopleAsync()
         {
-            return View();
+            return await personQueriesHandler.GetAllAsync();
         }
 
-        public async Task<IActionResult> List()
+        [HttpGet("person-data-by-id")]
+        public async Task<PersonDto> GetPersonById([FromQuery] int personId)
         {
-            var personLiitViewModel = new PersonListViewModel
-            {
-                List = await faceClient.GetAllAsync()
-            };
-
-            return View(personLiitViewModel);
+            // Add 404 Exception if no person was found, right now it is 204
+            return await personQueriesHandler.GetPersonByIdAsync(personId);
         }
 
-        public IActionResult Recognize()
+        [HttpPost("add-person")]
+        public void AddNewPerson([FromBody] AddPersonCommand personCommand)
         {
-            return View();
+            addPersonCommandHandler.Handle(personCommand);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Detect(string imageUrl)
+        [HttpPut("set-person-details/{id}")]
+        public void SetPersonDetails(int id, [FromBody] SetPersonDetailsCommand personCommand)
         {
-            if (string.IsNullOrEmpty(imageUrl))
-            {
-                return BadRequest("URL is required");
-            }
-            try
-            {
-                var imgdata = new WebClient().DownloadData(imageUrl);
-                return Json(await faceClient.RecognizeAsync(imgdata));
-            }
-            catch(WebException)
-            {
-                return BadRequest("Error accessing image, please try another");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Error recognizing");
-            }
-
-            return UnprocessableEntity("Please try again later");
+            personCommand.Id = id;
+            setPersonDetailsCommandHandler.Handle(personCommand);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(PersonViewModel personViewModel)
+        [HttpPut("set-person-name/{id}")]
+        public void SetPersonName(int id, [FromBody] SetPersonNameCommand personCommand)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var imgdata = new WebClient().DownloadData(personViewModel.ImageUrl);
-                    await faceClient.CreatePersonAsync(personViewModel.Name, personViewModel.Description, imgdata);
-                    TempData["Message"] = "Success";
-                    return RedirectToAction("Create");
-                }
-                catch(WebException)
-                {
-                    ModelState.AddModelError("", "Error accessing image, please try another");
-                }
-                catch(Exception ex)
-                {
-                    Logger.Error(ex, "Error creating person");
-                    ModelState.AddModelError("", "Please try again later");
-                }
-            }
+            personCommand.Id = id;
+            setPersonNameCommandHandler.Handle(personCommand);
+        }
 
-            return View();
+        [HttpPut("set-person-type/{id}")]
+        public void SetPersonType(int id, [FromBody] SetPersonTypeCommand personCommand)
+        {
+            personCommand.Id = id;
+            setPersonTypeCommandHandler.Handle(personCommand);
+        }
+
+        [HttpPut("set-person-identificator/{id}")]
+        public void SetPersonIdentificator(int id, [FromBody] SetPersonIdentificatorCommand personCommand)
+        {
+            personCommand.Id = id;
+            setPersonIdentificatorCommandHandler.Handle(personCommand);
+        }
+
+        // ----------------------------- Statistical Data -----------------------------
+
+        [HttpGet("statistical-data")]
+        public Task<IEnumerable<StatisticalDataDto>> GetAllStatisticalDataAsync()
+        {
+            return statisticalDataQueriesHandler.GetAllAsync();
+        }
+
+        [HttpPost("add-statistical-data")]
+        public void AddStatisticalData([FromBody] AddStatisticalDataCommand statisticCommand)
+        {
+            addStatisticalDataCommandHandler.Handle(statisticCommand);
+        }
+
+        [HttpGet("statistical-data-by-person-id")]
+        public Task<IEnumerable<StatisticalDataDto>> GetAllStatisticalDataByPeronIdAsync([FromQuery] int personId)
+        {
+            return statisticalDataQueriesHandler.GetStatisticsByPersonId(personId);
+        }
+
+        [HttpGet("statistical-data-by-time-constraints")]
+        public Task<IEnumerable<StatisticalDataDto>> GetAllStatisticalDataByTimeConstraintsAsync([FromQuery] long timeStart, [FromQuery] long timeEnd)
+        {
+            return statisticalDataQueriesHandler.GetStatisticsByTimeConstraint(timeStart, timeEnd);
+        }
+
+
+        [HttpGet("statistical-data-by-time-constraints-and-person-id")]
+        public Task<IEnumerable<StatisticalDataDto>> GetAllStatisticalDataByTimeConstraintAndPersonIAsync([FromQuery] int personId, [FromQuery] long timeStart, [FromQuery] long timeEnd)
+        {
+            return statisticalDataQueriesHandler.GetStatisticsByTimeConstraintAndPersonId(personId, timeStart, timeEnd);
         }
     }
 }

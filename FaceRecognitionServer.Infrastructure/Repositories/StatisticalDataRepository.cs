@@ -2,13 +2,12 @@
 {
     using Dapper;
     using FaceRecognitionServer.Domain.FaceRecognitionServerAggregate;
-    using Microsoft.VisualBasic;
+    using FaceRecognitionServer.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using System.Xml.Linq;
 

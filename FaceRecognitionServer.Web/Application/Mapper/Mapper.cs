@@ -3,7 +3,6 @@
     using FaceRecognitionServer.Domain.FaceRecognitionServerAggregate;
     using FaceRecognitionServer.Web.Application.Dtos;
     using System;
-    using System.Linq;
 
     public static class Mapper
     {
