@@ -19,10 +19,6 @@
     <ProjectReference Include="..\FaceRecognitionServer.Infrastructure\FaceRecognitionServer.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\Dtos\" />
-    <Folder Include="Application\Mapper\" />
-    <Folder Include="Application\Queries\" />
-  </ItemGroup>
+
 
 </Project>

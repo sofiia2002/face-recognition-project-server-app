@@ -8,6 +8,8 @@ namespace FaceRecognitionServer.Web
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using FaceRecognitionServer.Web.Application.Queries;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -25,8 +27,17 @@ namespace FaceRecognitionServer.Web
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FaceRecognitionServer.Web", Version = "v1" });
             });
+            services.AddSingleton<IPersonRepository, PersonRepository>();
+            services.AddTransient<IPersonQueriesHandler, PersonQueriesHandler>();
+            services.AddTransient<ICommandHandler<AddPersonCommand>, AddPersonCommandHandler>();
+            services.AddTransient<ICommandHandler<SetPersonDetailsCommand>, SetPersonDetailsCommandHandler>();
+            services.AddTransient<ICommandHandler<SetPersonNameCommand>, SetPersonNameCommandHandler>();
+            services.AddTransient<ICommandHandler<SetPersonTypeCommand>, SetPersonTypeCommandHandler>();
+            services.AddTransient<ICommandHandler<SetPersonIdentificatorCommand>, SetPersonIdentificatorCommandHandler>();
 
-            // singletons
+            services.AddSingleton<IStatisticalDataRepository, StatisticalDataRepository>();
+            services.AddTransient<IStatisticalDataQueriesHandler, StatisticalDataQueriesHandler>();
+            services.AddTransient<ICommandHandler<AddStatisticalDataCommand>, AddStatisticalDataCommandHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -35,7 +46,7 @@ namespace FaceRecognitionServer.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Laboratories.Web v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FaceRecognitionServer.Web v1"));
             }
 
             app.UseHttpsRedirection();

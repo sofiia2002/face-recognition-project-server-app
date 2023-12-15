@@ -2,22 +2,23 @@
 {
     using FaceRecognitionServer.Domain.SeedWork;
     using Microsoft.VisualBasic;
+    using System;
 
     public class StatisticalDataEntity : Entity
     {
         public int PersonId { get; private set; }
         public string Emotion { get; private set; }
-        public DateAndTime TimeOnFrame { get; private set; }
-        public DateAndTime TimeOffFrame { get; private set; }
+        public DateTime TimeOnFrame { get; private set; }
+        public DateTime TimeOffFrame { get; private set; }
 
-        public StatisticalDataEntity(int id, int personId, DateAndTime timeOnFrame, DateAndTime timeOffFrame) : base(id)
+        public StatisticalDataEntity(int id, int personId, DateTime timeOnFrame, DateTime timeOffFrame) : base(id)
         {
             PersonId = personId;
             TimeOnFrame = timeOnFrame;
             TimeOffFrame = timeOffFrame;
         }
 
-        public StatisticalDataEntity(int id, int personId, DateAndTime timeOnFrame, DateAndTime timeOffFrame, string emotion) : base(id)
+        public StatisticalDataEntity(int id, int personId, DateTime timeOnFrame, DateTime timeOffFrame, string emotion) : base(id)
         {
             PersonId = personId;
             TimeOnFrame = timeOnFrame;

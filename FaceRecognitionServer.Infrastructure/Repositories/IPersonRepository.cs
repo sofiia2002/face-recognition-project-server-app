@@ -7,9 +7,13 @@
 
     public interface IPersonRepository
     {
-        Task AddPersonAsync(Person person, Stream imgStream);
+        Task AddPersonAsync(string name, string identificator, int type); //, Stream imgStream);
+        Task SetPersonNameAsync(string name, int personId); 
+        Task SetPersonIdentificatorAsync( string identificator, int personId);
+        Task SetPersonTypeAsync(int type, int personId);
+        Task SetPersonDetailsAsync(int personId, string name, string identificator, int type);
         Task<List<Person>> GetAllAsync();
-        Task<Person> GetPersonById(int personId);
+        Task<Person> GetPersonByIdAsync(int personId);
 
     }
 }
