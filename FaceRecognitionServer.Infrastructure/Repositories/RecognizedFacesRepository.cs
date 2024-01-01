@@ -115,7 +115,8 @@ namespace FaceRecognitionServer.Infrastructure.Repositories
 
         public async Task<List<RecognizedFace>> GetRecFacesByTypeAsync(int type)
         {
-            const string getPersonByIdQuery = @"SELECT * FROM RecognizedFaces WHERE type = @Type";
+            const string getPersonByIdQuery = @"SELECT RecognizedFaces.*, Person.type FROM RecognizedFaces JOIN Person ON RecognizedFaces.person_id = Person.id WHERE Person.type = @Type";
+
             var people = new List<RecognizedFace>();
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
