@@ -31,7 +31,7 @@
                 {
                     while (await reader.ReadAsync())
                     {
-                        var person = new Person(Convert.ToInt32(reader["id"]), Convert.ToString(reader["name"]), Convert.ToString(reader["identificator"]), Convert.ToInt32(reader["type"]));
+                        var person = new Person(Convert.ToInt32(reader["id"]), Convert.ToString(reader["name"]), Convert.ToString(reader["identificator"]), Convert.ToInt32(reader["type"]), Convert.ToString(reader["Image"]));
 
                         people.Add(person);
                     }
@@ -56,7 +56,7 @@
                     {
                         if (await reader.ReadAsync())
                         {
-                            return new Person(Convert.ToInt32(reader["id"]), Convert.ToString(reader["name"]), Convert.ToString(reader["identificator"]), Convert.ToInt32(reader["type"]));
+                            return new Person(Convert.ToInt32(reader["id"]), Convert.ToString(reader["name"]), Convert.ToString(reader["identificator"]), Convert.ToInt32(reader["type"]), Convert.ToString(reader["Image"]));
                         }
                     }
                 }

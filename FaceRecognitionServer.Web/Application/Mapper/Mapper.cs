@@ -46,7 +46,8 @@
                 person.Id,
                 person.Name,
                 person.Identificator,
-                person.Type
+                person.Type,
+                person.ImgUrl
             );
         }
     }
