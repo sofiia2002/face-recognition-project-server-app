@@ -12,7 +12,7 @@
 
         void ICommandHandler<AddStatisticalDataCommand>.Handle(AddStatisticalDataCommand command)
         {
-            statisticalDataRepository.AddStatisticAsync(command.PersonId, command.Emotion, command.TimeOnFrame, command.TimeOffFrame);
+            statisticalDataRepository.AddStatisticAsync(command.PersonId, command.TimeOnFrame, command.TimeOffFrame);
         }
     }
 
