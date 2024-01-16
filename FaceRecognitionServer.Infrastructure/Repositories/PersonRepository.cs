@@ -61,8 +61,8 @@
                     }
                 }
             }
-            Console.WriteLine($"Error 404: Person with person_id {personId} does nor exist");
-            throw new CustomException($"Not Found Exception: Person with person_id {personId} does nor exist", 404);
+            Console.WriteLine($"Error 404: Person with person_id {personId} does not exist");
+            throw new CustomException($"Not Found Exception: Person with person_id {personId} does not exist", 404);
         }
 
         async Task IPersonRepository.SetPersonDetailsAsync(int personId, string name, string identificator, int type)
@@ -76,7 +76,7 @@
                 WHERE id = @PersonId;";
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {
@@ -123,7 +123,7 @@
     WHERE id = @PersonId;";
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {
@@ -171,7 +171,7 @@
                 WHERE id = @PersonId;";
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {
@@ -219,7 +219,7 @@
     WHERE id = @PersonId;";
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {

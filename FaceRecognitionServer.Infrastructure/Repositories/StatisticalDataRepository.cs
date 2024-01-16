@@ -19,7 +19,7 @@
         async Task IStatisticalDataRepository.AddStatisticAsync(int person_id, long time_on_frame, long time_off_frame)
         {
             // Check if the person_id exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE person_id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE person_id = @PersonId;";
 
             // Your insert query remains the same
             const string createPersonQuery = @"
@@ -111,7 +111,7 @@
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE person_id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE person_id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {
@@ -195,7 +195,7 @@
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Persons WHERE person_id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE person_id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {
