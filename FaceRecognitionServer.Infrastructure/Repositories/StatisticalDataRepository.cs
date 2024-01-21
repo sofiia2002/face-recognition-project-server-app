@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.SqlClient;
+    using System.Net;
     using System.Threading.Tasks;
 
     public class StatisticalDataRepository : IStatisticalDataRepository
@@ -19,7 +20,7 @@
         async Task IStatisticalDataRepository.AddStatisticAsync(int person_id, long time_on_frame, long time_off_frame)
         {
             // Check if the person_id exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE person_id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE id = @PersonId;";
 
             // Your insert query remains the same
             const string createPersonQuery = @"
@@ -50,7 +51,11 @@
 
                         // Commit the transaction
                         transaction.Commit();
-                        Console.WriteLine($"Success 204: Statisctic for person with id {person_id} Added Successfully");
+                        Console.WriteLine($"Success 204: Statistics for person with id {person_id} added successfully");
+                    }
+                    catch (System.Data.SqlClient.SqlException e)
+                    {
+                        Console.WriteLine(e.Message);
                     }
                     catch (Exception e)
                     {
@@ -111,7 +116,7 @@
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
             // Check if the person with the specified personId exists
-            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE person_id = @PersonId;";
+            const string checkPersonQuery = "SELECT COUNT(*) FROM Person WHERE id = @PersonId;";
 
             using (var dbConnection = new SqlConnection(Constants.connectionString))
             {
@@ -124,7 +129,7 @@
                 if (personCount == 0)
                 {
                     // Handle the case where the person_id doesn't exist
-                    throw new InvalidOperationException("Perso with such person_id does not exist.");
+                    throw new InvalidOperationException("Person with such personId does not exist.");
                 }
 
                 using (var command = new SqlCommand(getStatisticalDataByPersonIdQuery, dbConnection))
